@@ -1,0 +1,7 @@
+.conversation:hover {
+  background-color: #363636;
+  cursor: pointer;
+}
+.conversation {
+  cursor: pointer;
+}

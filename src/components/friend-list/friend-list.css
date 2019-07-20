@@ -1,0 +1,9 @@
+.friend:hover {
+  cursor: pointer;
+  background-color: #303030;
+}
+
+.friends {
+  overflow: auto;
+  max-height: 400px;
+}
