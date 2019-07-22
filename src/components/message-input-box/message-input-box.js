@@ -8,12 +8,13 @@ const MessageInputBox = ({
   messageInputChange,
   messageInputClear,
   sonetService,
-  id
+  id,
+  userId
 }) => {
   const onSendMessage = event => {
     event.preventDefault();
     if (messageLabel.trim() !== "") {
-      sonetService.socketSend(id, messageLabel.trim());
+      sonetService.socketSend(id, messageLabel.trim(), userId);
       messageInputClear();
     }
   };
@@ -36,8 +37,8 @@ const MessageInputBox = ({
   );
 };
 
-const mapStateToProps = ({ messageLabel }) => {
-  return { messageLabel };
+const mapStateToProps = ({ messageLabel, userId }) => {
+  return { messageLabel, userId };
 };
 
 const mapDispatchToProps = dispatch => {

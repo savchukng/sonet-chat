@@ -28,8 +28,8 @@ const ConversationList = ({ conversations }) => {
 
 class ConversationListContainer extends Component {
   componentDidMount() {
-    const { fetchConversations } = this.props;
-    fetchConversations();
+    const { fetchConversations, userId } = this.props;
+    fetchConversations(userId);
   }
 
   render() {
@@ -41,13 +41,14 @@ class ConversationListContainer extends Component {
   }
 }
 
-const mapStateToProps = ({ conversations, loadingConversations }) => {
-  return { conversations, loadingConversations };
+const mapStateToProps = ({ conversations, loadingConversations, userId }) => {
+  return { conversations, loadingConversations, userId };
 };
 
 const mapDispatchToProps = (dispatch, { sonetService }) => {
   return {
-    fetchConversations: fetchConversations(sonetService, dispatch)
+    fetchConversations: userId =>
+      fetchConversations(sonetService, dispatch, userId)()
   };
 };
 

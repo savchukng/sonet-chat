@@ -1,3 +1,7 @@
 .checked {
   background-color: #434343;
 }
+
+.checked:hover {
+  background-color: #505050;
+}

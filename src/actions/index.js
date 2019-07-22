@@ -37,10 +37,10 @@ const messagesRequested = () => {
   };
 };
 
-const messageAdded = (content, sender, date) => {
+const messageAdded = (content, sender, sendTime) => {
   return {
     type: "MESSAGE_ADDED",
-    payload: { content, sender, date }
+    payload: { content, sender, sendTime }
   };
 };
 
@@ -90,21 +90,21 @@ const hideModal = () => {
   };
 };
 
-const fetchConversations = (sonetService, dispatch) => () => {
+const fetchConversations = (sonetService, dispatch, userId) => () => {
   dispatch(conversationsRequested());
   sonetService
-    .getConversations()
+    .getConversations(userId)
     .then(data => dispatch(conversationsLoaded(data)));
 };
 
-const fetchFriends = (sonetService, dispatch) => () => {
+const fetchFriends = (sonetService, dispatch, userId) => () => {
   dispatch(friendsRequested());
-  sonetService.getFriends().then(data => dispatch(friendsLoaded(data)));
+  sonetService.getFriends(userId).then(data => dispatch(friendsLoaded(data)));
 };
 
-const fetchMessages = (sonetService, dispatch) => () => {
+const fetchMessages = (sonetService, id, dispatch) => () => {
   dispatch(messagesRequested());
-  sonetService.getMessages().then(data => dispatch(messagesLoaded(data)));
+  sonetService.getMessages(id).then(data => dispatch(messagesLoaded(data)));
 };
 
 export {

@@ -15,12 +15,17 @@ class MessageList extends Component {
 
   componentDidMount() {
     const { fetchMessages, addMessage, sonetService, id } = this.props;
-    fetchMessages();
+    fetchMessages(id);
     sonetService.socketConnect();
-    sonetService.socketSubscribe(id, (content, sender, date) => {
-      addMessage(content, sender, date);
+    sonetService.socketSubscribe(id, (content, sender, sendTime) => {
+      addMessage(content, sender, sendTime);
     });
     this.scrollToBottom();
+  }
+
+  componentWillMount() {
+    const { sonetService } = this.props;
+    sonetService.socketDisconnect();
   }
 
   componentDidUpdate() {
@@ -29,7 +34,7 @@ class MessageList extends Component {
 
   scrollToBottom = () => {
     if (this.messagesEndRef.current !== null) {
-      this.messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      this.messagesEndRef.current.scrollIntoView();
     }
   };
 
@@ -59,9 +64,9 @@ const mapStateToProps = ({ messages, loadingMessages }) => {
 
 const mapDispatchToProps = (dispatch, { sonetService }) => {
   return {
-    fetchMessages: fetchMessages(sonetService, dispatch),
-    addMessage: (content, sender, date) =>
-      dispatch(messageAdded(content, sender, date))
+    fetchMessages: id => fetchMessages(sonetService, id, dispatch)(),
+    addMessage: (content, sender, sendTime) =>
+      dispatch(messageAdded(content, sender, sendTime))
   };
 };
 

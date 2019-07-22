@@ -7,11 +7,11 @@ const ConversationListHeader = ({ showModal }) => {
   return (
     <div className="p-2">
       <h3 className="col-sm-9 d-inline-block mt-3">Conversations</h3>
-      <button className="col-sm-3 btn btn-secondary mb-2" onClick={showModal}>
+      <button className="col-sm-3 btn btn-secondary mb-3" onClick={showModal}>
         Create conversation
       </button>
       <CreateConversationModal />
-      <hr />
+      <hr className="m-0" />
     </div>
   );
 };

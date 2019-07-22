@@ -2,6 +2,7 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 
 class SonetService {
+  BASE_URL = "http://localhost:8081/api";
   socket;
   stompClient;
 
@@ -13,7 +14,7 @@ class SonetService {
         id: 1,
         content: "First message",
         sender: "Mark",
-        date: new Date()
+        sendTime: new Date()
       }
     },
     {
@@ -23,13 +24,13 @@ class SonetService {
         id: 2,
         content: "Second message",
         sender: "Mark",
-        date: new Date()
+        sendTime: new Date()
       }
     }
   ];
   messages = [
-    { id: 1, content: "First message", sender: "Mark", date: new Date() },
-    { id: 2, content: "Second message", sender: "Mark", date: new Date() }
+    { id: 1, content: "First message", sender: "Mark", sendTime: new Date() },
+    { id: 2, content: "Second message", sender: "Mark", sendTime: new Date() }
   ];
 
   friends = [
@@ -38,7 +39,7 @@ class SonetService {
   ];
 
   socketConnect() {
-    this.socket = new SockJS("http://localhost:8080/ws");
+    this.socket = new SockJS(`${this.BASE_URL}/ws`);
     this.stompClient = Stomp.over(this.socket);
   }
 
@@ -49,25 +50,30 @@ class SonetService {
         subscribeAction(
           JSON.parse(message.body).content,
           JSON.parse(message.body).sender,
-          new Date(JSON.parse(message.body).date)
+          new Date(JSON.parse(message.body).sendTime)
         );
       });
     });
   }
 
-  socketSend(id, message) {
+  socketSend(id, message, senderId) {
     this.stompClient.send(
       `/app/message/${id}`,
       {},
-      JSON.stringify({ content: message })
+      JSON.stringify({ content: message, senderId })
     );
   }
 
   socketDisconnect() {
-    this.socket.close();
+    if (this.socket) {
+      this.socket.close();
+    }
   }
 
-  getConversations() {
+  getConversations(id) {
+    return fetch(`${this.BASE_URL}/api/user/${id}/conversations`)
+      .then(response => response.json())
+      .then(data => data);
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(this.data);
@@ -75,7 +81,10 @@ class SonetService {
     });
   }
 
-  getFriends() {
+  getFriends(id) {
+    return fetch(`${this.BASE_URL}/api/user/${id}/following`)
+      .then(response => response.json())
+      .then(data => data);
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(this.friends);
@@ -83,7 +92,10 @@ class SonetService {
     });
   }
 
-  getMessages() {
+  getMessages(id) {
+    return fetch(`${this.BASE_URL}/api/chats/${id}/messages`)
+      .then(response => response.json())
+      .then(messages => messages);
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(this.messages);
@@ -99,8 +111,14 @@ class SonetService {
     };
   }
 
-  createConversation() {
-    console.log("Conversation created!");
+  createConversation(conversation, creatorId) {
+    fetch(`${this.BASE_URL}/api/chats/create`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ...conversation, creatorId })
+    });
   }
 }
 

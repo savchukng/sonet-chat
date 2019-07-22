@@ -11,14 +11,27 @@ const CreateConversationModal = ({
   showModal,
   hideModal,
   sonetService,
-  fetchConversations
+  fetchConversations,
+  conversationNameLabel,
+  friends,
+  userId
 }) => {
   const showHideClassName =
     "form-group modal display-" + (showModal ? "block" : "none");
   const onCreate = () => {
-    sonetService.createConversation();
+    let checkedFriends = [];
+    friends.forEach(friend => {
+      checkedFriends.push(friend.id);
+    });
+    sonetService.createConversation(
+      {
+        conversationNameLabel,
+        checkedFriends
+      },
+      userId
+    );
     hideModal();
-    fetchConversations();
+    fetchConversations(userId);
   };
   return (
     <div className={showHideClassName}>
@@ -39,15 +52,24 @@ const CreateConversationModal = ({
   );
 };
 
-const mapStateToProps = ({ showModal }) => {
+const mapStateToProps = ({
+  showModal,
+  conversationNameLabel,
+  friends,
+  userId
+}) => {
   return {
-    showModal
+    showModal,
+    conversationNameLabel,
+    friends,
+    userId
   };
 };
 
 const mapDispatchToProps = (dispatch, { sonetService }) => {
   return {
-    fetchConversations: fetchConversations(sonetService, dispatch),
+    fetchConversations: userId =>
+      fetchConversations(sonetService, dispatch, userId)(),
     hideModal: () => dispatch(hideModal())
   };
 };

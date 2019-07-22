@@ -8,8 +8,8 @@ import "./friend-list.css";
 
 class FriendList extends Component {
   componentDidMount() {
-    const { fetchFriends } = this.props;
-    fetchFriends();
+    const { fetchFriends, userId } = this.props;
+    fetchFriends(userId);
   }
 
   render() {
@@ -49,17 +49,23 @@ class FriendList extends Component {
   }
 }
 
-const mapStateToProps = ({ friends, loadingFriends, searchFriendsLabel }) => {
+const mapStateToProps = ({
+  friends,
+  loadingFriends,
+  searchFriendsLabel,
+  userId
+}) => {
   return {
     friends,
     loadingFriends,
-    searchFriendsLabel
+    searchFriendsLabel,
+    userId
   };
 };
 
 const mapDispatchToProps = (dispatch, { sonetService }) => {
   return {
-    fetchFriends: fetchFriends(sonetService, dispatch),
+    fetchFriends: userId => fetchFriends(sonetService, dispatch, userId)(),
     onFriendCheck: friend => dispatch(toggleCheckFriend(friend))
   };
 };

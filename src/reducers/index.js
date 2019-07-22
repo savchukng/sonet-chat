@@ -1,4 +1,5 @@
 const initialState = {
+  userId: 1,
   conversations: [],
   messages: [],
   friends: [],
@@ -6,7 +7,7 @@ const initialState = {
   loadingMessages: true,
   loadingFriends: true,
   messageLabel: "",
-  conversaionNameLabel: "",
+  conversationNameLabel: "",
   searchFriendsLabel: "",
   showModal: false
 };
@@ -58,7 +59,7 @@ const reducer = (state = initialState, action) => {
             id: Math.random() * 1000,
             content: action.payload.content,
             sender: action.payload.sender,
-            date: action.payload.date
+            sendTime: action.payload.sendTime
           }
         ]
       };
@@ -70,7 +71,7 @@ const reducer = (state = initialState, action) => {
     case "CONVERSATION_NAME_INPUT_CHANGE":
       return {
         ...state,
-        conversaionNameLabel: action.payload
+        conversationNameLabel: action.payload
       };
     case "SEARCH_FRIENDS_INPUT_CHANGE":
       return {
